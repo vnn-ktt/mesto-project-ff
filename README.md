@@ -1,17 +1,44 @@
 # Проект: [Mesto](https://github.com/vnn-ktt/mesto-project-ff.git)
 
-## Данный репозиторий является частью проекта "Mesto" (ссылка недоступна)!
+## Данный репозиторий является частью проекта "Mesto"!
 
 ## Описание
 
-В этом проекте представлена часть веб-сайта!
+На 21.01.24 в этом проекте представлена часть функциональности веб-сайта!
+
+## Скрипты
+
+Установка необоходимых пакетов:
+
+```bash
+npm i
+```
+
+Разворачивание проекта на прод:
+
+```bash
+npm run prod
+```
+
+Разворачивание проекта на разработку:
+
+```bash
+npm run dev
+```
+
+```bash
+npm run watch
+```
 
 ## Технологии
 
-- Native HTML, SVG
+- Node Package Manager 10.3.0
+- Native HTML, SVG, Forms
 - Native CSS: Flexbox and Grid Layout
-- Native JavaScript
+- Native JavaScript: Arrays, Objects, EventListeners, ECMA 6
+- Webpack: Live server, Babel.js, Autoprefixier, Optimizers
 - Adaptive design
+- Optimized images
 - Progressive improvement
 
 ## Скриншот
