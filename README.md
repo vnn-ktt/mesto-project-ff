@@ -6,12 +6,37 @@
 
 На 21.01.24 в этом проекте представлена часть функциональности веб-сайта!
 
+## Скрипты
+
+Установка необоходимых пакетов:
+
+```bash
+npm i
+```
+
+Разворачивание проекта на прод:
+
+```bash
+npm run prod
+```
+
+Разворачивание проекта на разработку:
+
+```bash
+npm run dev
+```
+
+```bash
+npm run watch
+```
+
 ## Технологии
 
-- Native HTML, SVG: Forms
+- Node Package Manager 10.3.0
+- Native HTML, SVG, Forms
 - Native CSS: Flexbox and Grid Layout
-- Native JavaScript: Arrays, Objects, EventListeners, Forms
-- Webpack: Live server, Babel.js, Autoprefixierm and other
+- Native JavaScript: Arrays, Objects, EventListeners, ECMA 6
+- Webpack: Live server, Babel.js, Autoprefixier, Optimizers
 - Adaptive design
 - Optimized images
 - Progressive improvement
