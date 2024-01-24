@@ -16,3 +16,6 @@ export function makeCard(data, deleteCard, likeCard, deployCard) {
 export function deleteCard(card) {
   card.remove();
 }
+export function likeCard(evt) {
+  evt.target.classList.toggle('card__like-button_is-active');
+}

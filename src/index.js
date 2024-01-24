@@ -70,7 +70,7 @@ function handleFormEditProfileSubmit(evt) {
 }
 function handleFormNewPlaceSubmit(evt) {
   evt.preventDefault();
-  let data = {
+  const data = {
     name: formNewPlace.elements.placeName.value,
     link: formNewPlace.elements.link.value,
   };
@@ -78,15 +78,12 @@ function handleFormNewPlaceSubmit(evt) {
     cardComponent.makeCard(
       data,
       cardComponent.deleteCard,
-      likeCard,
+      cardComponent.likeCard,
       deployCard,
     ),
   );
   modalComponent.closePopup(page.querySelector('.popup_is-opened'));
   evt.target.reset();
-}
-function likeCard(evt) {
-  evt.target.classList.toggle('card__like-button_is-active');
 }
 function deployCard(evt) {
   popupTypeImageElementImage.src = evt.target.src;
@@ -103,7 +100,7 @@ initialCards.forEach((elem) => {
     cardComponent.makeCard(
       elem,
       cardComponent.deleteCard,
-      likeCard,
+      cardComponent.likeCard,
       deployCard,
     ),
   );
