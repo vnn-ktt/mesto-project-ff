@@ -26,10 +26,6 @@ npm run prod
 npm run dev
 ```
 
-```bash
-npm run watch
-```
-
 ## Технологии
 
 - Node Package Manager 10.3.0

@@ -1,11 +1,9 @@
-//Импорты
 import * as cardComponent from './scripts/components/card.js';
 import * as modalComponent from './scripts/components/modal.js';
 import './pages/index.css';
 import './images/logo.svg';
 import avatar from './images/avatar.jpg';
 
-//Переменные
 const initialCards = [
   {
     name: 'Архыз',
@@ -33,9 +31,14 @@ const initialCards = [
   },
 ];
 const page = document.querySelector('.page');
-const pageContent = document.querySelector('.page__content');
+const pageContent = page.querySelector('.page__content');
 const popupTypeEdit = page.querySelector('.popup_type_edit');
 const popupTypeAdd = page.querySelector('.popup_type_new-card');
+const popupTypeImage = page.querySelector('.popup_type_image');
+const popupTypeImageElementImage =
+  popupTypeImage.querySelector('.popup__image');
+const popupTypeImageElementCaption =
+  popupTypeImage.querySelector('.popup__caption');
 const popupTypeEditOpenButton = page.querySelector('.profile__edit-button');
 const popupTypeAddOpenButton = page.querySelector('.profile__add-button');
 const profileTitle = page.querySelector('.profile__title');
@@ -43,10 +46,11 @@ const profileDescription = page.querySelector('.profile__description');
 const cardsList = page.querySelector('.places__list');
 const formEditProfile = document.forms.editProfile;
 const formNewPlace = document.forms.newPlace;
-const profile = document.querySelector('.profile__image');
+const profile = page.querySelector('.profile__image');
 
-//Обработчики событий
 popupTypeEditOpenButton.addEventListener('click', () => {
+  formEditProfile.elements.name.value = profileTitle.textContent;
+  formEditProfile.elements.description.value = profileDescription.textContent;
   modalComponent.openPopup(popupTypeEdit);
 });
 popupTypeAddOpenButton.addEventListener('click', () => {
@@ -57,28 +61,52 @@ pageContent.addEventListener('click', (evt) => {
     modalComponent.closePopup(evt.target);
   }
 });
-function formEditProfileSubmitHandler(evt) {
+function handleFormEditProfileSubmit(evt) {
   evt.preventDefault();
   profileTitle.textContent = formEditProfile.elements.name.value;
   profileDescription.textContent = formEditProfile.elements.description.value;
   modalComponent.closePopup(document.querySelector('.popup_is-opened'));
+  evt.target.reset();
 }
-function formNewPlaceSubmitHandler(evt) {
+function handleFormNewPlaceSubmit(evt) {
   evt.preventDefault();
   let data = {
     name: formNewPlace.elements.placeName.value,
     link: formNewPlace.elements.link.value,
   };
-  cardsList.prepend(cardComponent.makeCard(data, cardComponent.deleteCard));
+  cardsList.prepend(
+    cardComponent.makeCard(
+      data,
+      cardComponent.deleteCard,
+      likeCard,
+      deployCard,
+    ),
+  );
   modalComponent.closePopup(page.querySelector('.popup_is-opened'));
+  evt.target.reset();
 }
-formEditProfile.addEventListener('submit', formEditProfileSubmitHandler);
-formNewPlace.addEventListener('submit', formNewPlaceSubmitHandler);
+function likeCard(evt) {
+  evt.target.classList.toggle('card__like-button_is-active');
+}
+function deployCard(evt) {
+  popupTypeImageElementImage.src = evt.target.src;
+  popupTypeImageElementImage.alt = evt.target.alt;
+  popupTypeImageElementCaption.textContent = evt.target.alt;
+  modalComponent.openPopup(popupTypeImage);
+}
+formEditProfile.addEventListener('submit', handleFormEditProfileSubmit);
+formNewPlace.addEventListener('submit', handleFormNewPlaceSubmit);
 
-//Инициализация проекта
 profile.style.cssText = `background-image: url(${avatar})`;
 initialCards.forEach((elem) => {
-  cardsList.append(cardComponent.makeCard(elem, cardComponent.deleteCard));
+  cardsList.append(
+    cardComponent.makeCard(
+      elem,
+      cardComponent.deleteCard,
+      likeCard,
+      deployCard,
+    ),
+  );
 });
 pageContent.querySelectorAll('.popup__close').forEach((elem) => {
   elem.addEventListener('click', () => {

@@ -4,9 +4,8 @@
   "description": "Проектная работа Mesto.",
   "main": "index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development npx webpack --mode development",
-    "prod": "cross-env NODE_ENV=production npx webpack --mode production",
-    "watch": "cross-env NODE_ENV=development npx webpack-dev-server --mode development --open"
+    "dev": "cross-env NODE_ENV=development npx webpack-dev-server --mode development --open",
+    "prod": "cross-env NODE_ENV=production npx webpack --mode production"
   },
   "browserslist": "> 0.25%, not dead",
   "repository": {
