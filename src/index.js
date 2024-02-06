@@ -1,35 +1,15 @@
 import * as cardComponent from './scripts/components/card.js';
 import * as modalComponent from './scripts/components/modal.js';
+import * as validationComponent from './scripts/components/validation.js';
+import * as apiComponent from './scripts/components/api.js';
 import './pages/index.css';
 import './images/logo.svg';
-import avatar from './images/avatar.jpg';
 
-const initialCards = [
-  {
-    name: 'Архыз',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg',
-  },
-  {
-    name: 'Челябинская область',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg',
-  },
-  {
-    name: 'Иваново',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg',
-  },
-  {
-    name: 'Камчатка',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg',
-  },
-  {
-    name: 'Холмогорский район',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg',
-  },
-  {
-    name: 'Байкал',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg',
-  },
-];
+/**
+ * DOM elements
+ * Variables, function declarations
+ */
+
 const page = document.querySelector('.page');
 const pageContent = page.querySelector('.page__content');
 const popupTypeEdit = page.querySelector('.popup_type_edit');
@@ -41,74 +21,126 @@ const popupTypeImageElementCaption =
   popupTypeImage.querySelector('.popup__caption');
 const popupTypeEditOpenButton = page.querySelector('.profile__edit-button');
 const popupTypeAddOpenButton = page.querySelector('.profile__add-button');
+const profileImage = page.querySelector('.profile__image');
 const profileTitle = page.querySelector('.profile__title');
 const profileDescription = page.querySelector('.profile__description');
 const cardsList = page.querySelector('.places__list');
-const formEditProfile = document.forms.editProfile;
-const formNewPlace = document.forms.newPlace;
-const profile = page.querySelector('.profile__image');
+const formsList = document.forms;
+const formEditProfile = formsList.editProfile;
+const formNewPlace = formsList.newPlace;
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'input-error',
+};
 
-popupTypeEditOpenButton.addEventListener('click', () => {
-  formEditProfile.elements.name.value = profileTitle.textContent;
-  formEditProfile.elements.description.value = profileDescription.textContent;
-  modalComponent.openPopup(popupTypeEdit);
-});
-popupTypeAddOpenButton.addEventListener('click', () => {
-  modalComponent.openPopup(popupTypeAdd);
-});
-pageContent.addEventListener('click', (evt) => {
-  if (evt.target.classList.contains('popup_is-opened')) {
-    modalComponent.closePopup(evt.target);
-  }
-});
 function handleFormEditProfileSubmit(evt) {
   evt.preventDefault();
-  profileTitle.textContent = formEditProfile.elements.name.value;
-  profileDescription.textContent = formEditProfile.elements.description.value;
+  const userData = {
+    name: formEditProfile.elements.name.value,
+    about: formEditProfile.elements.description.value,
+  };
+  apiComponent
+    .requestUpdateUser(userData)
+    .then((user) => {
+      profileTitle.textContent = user.name;
+      profileDescription.textContent = user.about;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   modalComponent.closePopup(document.querySelector('.popup_is-opened'));
   evt.target.reset();
 }
+
 function handleFormNewPlaceSubmit(evt) {
   evt.preventDefault();
-  const data = {
+  const dataCard = {
     name: formNewPlace.elements.placeName.value,
     link: formNewPlace.elements.link.value,
   };
-  cardsList.prepend(
-    cardComponent.makeCard(
-      data,
-      cardComponent.deleteCard,
-      cardComponent.likeCard,
-      deployCard,
-    ),
-  );
+  apiComponent
+    .requestCreateCard(dataCard)
+    .then((dataCard) => {
+      const card = cardComponent.makeCard(
+        dataCard,
+        cardComponent.deleteCard,
+        cardComponent.likeCard,
+        deployCard,
+      );
+      cardsList.prepend(card);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   modalComponent.closePopup(page.querySelector('.popup_is-opened'));
   evt.target.reset();
 }
+
 function deployCard(evt) {
   popupTypeImageElementImage.src = evt.target.src;
   popupTypeImageElementImage.alt = evt.target.alt;
   popupTypeImageElementCaption.textContent = evt.target.alt;
   modalComponent.openPopup(popupTypeImage);
 }
-formEditProfile.addEventListener('submit', handleFormEditProfileSubmit);
-formNewPlace.addEventListener('submit', handleFormNewPlaceSubmit);
+/**
+ * Initialization
+ */
 
-profile.style.cssText = `background-image: url(${avatar})`;
-initialCards.forEach((elem) => {
-  cardsList.append(
-    cardComponent.makeCard(
-      elem,
-      cardComponent.deleteCard,
-      cardComponent.likeCard,
-      deployCard,
-    ),
-  );
+Promise.all([apiComponent.requestGetUser(), apiComponent.requestGetCards()])
+  .then((response) => {
+    profileTitle.textContent = response[0].name;
+    profileDescription.textContent = response[0].about;
+    profileImage.style.cssText = `background-image: url(${response[0].avatar})`;
+    response[1].forEach((dataCard) => {
+      const card = cardComponent.makeCard(
+        dataCard,
+        cardComponent.deleteCard,
+        cardComponent.likeCard,
+        deployCard,
+      );
+      cardsList.append(card);
+    });
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+
+popupTypeEditOpenButton.addEventListener('click', () => {
+  formEditProfile.elements.name.value = profileTitle.textContent;
+  formEditProfile.elements.description.value = profileDescription.textContent;
+  validationComponent.clearValidation(formEditProfile, validationConfig);
+  modalComponent.openPopup(popupTypeEdit);
 });
+
+popupTypeAddOpenButton.addEventListener('click', () => {
+  formNewPlace.elements.placeName.value = '';
+  formNewPlace.elements.link.value = '';
+  validationComponent.clearValidation(formNewPlace, validationConfig);
+  modalComponent.openPopup(popupTypeAdd);
+});
+
+pageContent.addEventListener('click', (evt) => {
+  if (evt.target.classList.contains('popup_is-opened')) {
+    modalComponent.closePopup(evt.target);
+  }
+});
+
 pageContent.querySelectorAll('.popup__close').forEach((elem) => {
   elem.addEventListener('click', () => {
     modalComponent.closePopup(pageContent.querySelector('.popup_is-opened'));
   });
 });
-formEditProfile.elements.name.value = 'Жак-Ив Кусто';
-formEditProfile.elements.description.value = 'Исследователь океана';
+
+formEditProfile.addEventListener('submit', handleFormEditProfileSubmit);
+
+formNewPlace.addEventListener('submit', handleFormNewPlaceSubmit);
+
+formEditProfile.elements.name.value = profileTitle.textContent;
+
+formEditProfile.elements.description.value = profileDescription.textContent;
+
+validationComponent.enableValidation(formsList, validationConfig);

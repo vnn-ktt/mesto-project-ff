@@ -1,5 +1,4 @@
 const pageContent = document.querySelector('.page__content');
-
 function handleKeyboardEsc(evt) {
   if (evt.key === 'Escape') {
     closePopup(pageContent.querySelector('.popup_is-opened'));
