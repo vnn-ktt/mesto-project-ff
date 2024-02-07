@@ -4,7 +4,7 @@
 
 ## Описание
 
-На 21.01.24 в этом проекте представлена часть функциональности веб-сайта!
+Проектная работа, представляющая небольшой веб-сайт, позволяющий выкладывать фотографии (места) в свой профиль.
 
 ## Скрипты
 
@@ -31,7 +31,7 @@ npm run dev
 - Node Package Manager 10.3.0
 - Native HTML, SVG, Forms
 - Native CSS: Flexbox and Grid Layout
-- Native JavaScript: Arrays, Objects, EventListeners, ECMA 6
+- Native JavaScript: Arrays, Objects, EventListeners, ECMA 6, Fetch, Promise
 - Webpack: Live server, Babel.js, Autoprefixier, Optimizers
 - Adaptive design
 - Optimized images
