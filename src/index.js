@@ -15,6 +15,7 @@ const pageContent = page.querySelector('.page__content');
 const popupTypeEdit = page.querySelector('.popup_type_edit');
 const popupTypeAvatar = page.querySelector('.popup_type_avatar');
 const popupTypeAdd = page.querySelector('.popup_type_new-card');
+const popupTypeDelete = page.querySelector('.popup_type_delete-card');
 const popupTypeImage = page.querySelector('.popup_type_image');
 const popupTypeImageElementImage =
   popupTypeImage.querySelector('.popup__image');
@@ -30,6 +31,7 @@ const formsList = document.forms;
 const formEditProfile = formsList.editProfile;
 const formAvatar = formsList.updateAvatar;
 const formNewPlace = formsList.newPlace;
+const formDeleteCard = formsList.deleteCard;
 const validationConfig = {
   formSelector: '.popup__form',
   inputSelector: '.popup__input',
@@ -93,7 +95,7 @@ function handleFormNewPlaceSubmit(evt) {
     .then((dataCard) => {
       const card = cardComponent.makeCard(
         dataCard,
-        cardComponent.deleteCard,
+        handleDeleteCard,
         cardComponent.likeCard,
         deployCard,
       );
@@ -107,6 +109,16 @@ function handleFormNewPlaceSubmit(evt) {
       modalComponent.closePopup(document.querySelector('.popup_is-opened'));
       evt.target.reset();
     });
+}
+
+function handleDeleteCard(card) {
+  function handleApproveDelete() {
+    formDeleteCard.removeEventListener('submit', handleApproveDelete);
+    modalComponent.closePopup(popupTypeDelete);
+    cardComponent.deleteCard(card);
+  }
+  modalComponent.openPopup(popupTypeDelete);
+  formDeleteCard.addEventListener('submit', handleApproveDelete);
 }
 
 function deployCard(evt) {
@@ -139,7 +151,7 @@ Promise.all([apiComponent.requestGetUser(), apiComponent.requestGetCards()])
     response[1].forEach((dataCard) => {
       const card = cardComponent.makeCard(
         dataCard,
-        cardComponent.deleteCard,
+        handleDeleteCard,
         cardComponent.likeCard,
         deployCard,
       );

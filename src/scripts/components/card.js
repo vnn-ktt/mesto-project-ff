@@ -7,7 +7,7 @@ import {
 
 const cardTemplate = document.querySelector('#card-template').content;
 
-export const makeCard = (dataCard, deleteCard, likeCard, deployCard) => {
+export const makeCard = (dataCard, handleDeleteCard, likeCard, deployCard) => {
   const card = cardTemplate.querySelector('.card').cloneNode(true);
   const cardImage = card.querySelector('.card__image');
   const cardLikeButton = card.querySelector('.card__like-button');
@@ -27,7 +27,7 @@ export const makeCard = (dataCard, deleteCard, likeCard, deployCard) => {
   if (dataCard.owner._id === server_CONFIG._id_user) {
     card
       .querySelector('.card__delete-button')
-      .addEventListener('click', () => deleteCard(card));
+      .addEventListener('click', () => handleDeleteCard(card));
   } else {
     card.querySelector('.card__delete-button').remove();
   }
