@@ -21,8 +21,8 @@ export const makeCard = (dataCard, deleteCard, likeCard, deployCard) => {
   if (dataCard.likes.some((like) => like._id === server_CONFIG._id_user)) {
     cardLikeButton.classList.add('card__like-button_is-active');
   }
-  cardLikeButton.addEventListener('click', likeCard);
   card.querySelector('.card__like-count').textContent = dataCard.likes.length;
+  cardLikeButton.addEventListener('click', likeCard);
 
   if (dataCard.owner._id === server_CONFIG._id_user) {
     card
@@ -36,28 +36,40 @@ export const makeCard = (dataCard, deleteCard, likeCard, deployCard) => {
 };
 
 export const deleteCard = (card) => {
-  requestDeleteCard(card.dataset.cardId).then(() => {
-    card
-      .querySelector('.card__delete-button')
-      .removeEventListener('click', deleteCard);
-    card
-      .querySelector('.card__like-button')
-      .removeEventListener('click', likeCard);
-    card.remove();
-  });
+  requestDeleteCard(card.dataset.cardId)
+    .then(() => {
+      card
+        .querySelector('.card__delete-button')
+        .removeEventListener('click', deleteCard);
+      card
+        .querySelector('.card__like-button')
+        .removeEventListener('click', likeCard);
+      card.remove();
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 };
 
 export const likeCard = (evt) => {
   const card = evt.target.closest('.card');
   if (!evt.target.classList.contains('card__like-button_is-active')) {
-    requestLikeCard(card.dataset.cardId).then((dataCard) => {
-      evt.target.nextElementSibling.textContent = dataCard.likes.length;
-      evt.target.classList.add('card__like-button_is-active');
-    });
+    requestLikeCard(card.dataset.cardId)
+      .then((dataCard) => {
+        evt.target.nextElementSibling.textContent = dataCard.likes.length;
+        evt.target.classList.add('card__like-button_is-active');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   } else {
-    requestDislikeCard(card.dataset.cardId).then((dataCard) => {
-      evt.target.nextElementSibling.textContent = dataCard.likes.length;
-      evt.target.classList.remove('card__like-button_is-active');
-    });
+    requestDislikeCard(card.dataset.cardId)
+      .then((dataCard) => {
+        evt.target.nextElementSibling.textContent = dataCard.likes.length;
+        evt.target.classList.remove('card__like-button_is-active');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 };

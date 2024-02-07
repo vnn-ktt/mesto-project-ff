@@ -16,6 +16,13 @@ async function handleResponse(response) {
   }
 }
 
+export const requestHead = async (url) => {
+  const response = await fetch(`${url}`, {
+    method: 'HEAD',
+  });
+  return handleResponse(response);
+};
+
 export const requestGetUser = async () => {
   const response = await fetch(`${server_CONFIG.base_URL}/users/me`, {
     method: 'GET',
@@ -39,6 +46,17 @@ export const requestUpdateUser = async (user) => {
     body: JSON.stringify({
       name: user.name,
       about: user.about,
+    }),
+  });
+  return handleResponse(response);
+};
+
+export const requestUpdateAvatar = async (url) => {
+  const response = await fetch(`${server_CONFIG.base_URL}/users/me/avatar`, {
+    method: 'PATCH',
+    headers: server_CONFIG.headers,
+    body: JSON.stringify({
+      avatar: url,
     }),
   });
   return handleResponse(response);

@@ -7,6 +7,7 @@ export const enableValidation = (domFormList, validationConfig) => {
     });
   });
 };
+
 export const clearValidation = (form, validationConfig) => {
   const arrInputList = Array.from(
     form.querySelectorAll(validationConfig.inputSelector),
@@ -17,6 +18,7 @@ export const clearValidation = (form, validationConfig) => {
   });
   button.classList.add(validationConfig.inactiveButtonClass);
 };
+
 const setEventListenersToForm = (form, validationConfig) => {
   const arrInputList = Array.from(
     form.querySelectorAll(validationConfig.inputSelector),
@@ -30,6 +32,7 @@ const setEventListenersToForm = (form, validationConfig) => {
     });
   });
 };
+
 const toggleButtonState = (arrInputList, button, validationConfig) => {
   if (hasInvalidInput(arrInputList)) {
     button.classList.add(validationConfig.inactiveButtonClass);
@@ -37,11 +40,13 @@ const toggleButtonState = (arrInputList, button, validationConfig) => {
     button.classList.remove(validationConfig.inactiveButtonClass);
   }
 };
+
 const hasInvalidInput = (arrInputList) => {
   return arrInputList.some((inputElem) => {
     return !inputElem.validity.valid;
   });
 };
+
 const checkInputValidity = (formElem, inputElem, validationConfig) => {
   if (inputElem.validity.patternMismatch) {
     inputElem.setCustomValidity(inputElem.dataset.patternMismatchMessage);
@@ -59,6 +64,7 @@ const checkInputValidity = (formElem, inputElem, validationConfig) => {
     hideInputError(formElem, inputElem, validationConfig);
   }
 };
+
 const showInputError = (
   formElem,
   inputElem,
@@ -71,6 +77,7 @@ const showInputError = (
   inputElem.classList.add(validationConfig.inputErrorClass);
   errorElem.textContent = errorMessage;
 };
+
 const hideInputError = (formElem, inputElem, validationConfig) => {
   const errorElem = formElem.querySelector(
     `.${inputElem.id}-${validationConfig.errorClass}`,

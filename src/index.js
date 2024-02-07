@@ -13,6 +13,7 @@ import './images/logo.svg';
 const page = document.querySelector('.page');
 const pageContent = page.querySelector('.page__content');
 const popupTypeEdit = page.querySelector('.popup_type_edit');
+const popupTypeAvatar = page.querySelector('.popup_type_avatar');
 const popupTypeAdd = page.querySelector('.popup_type_new-card');
 const popupTypeImage = page.querySelector('.popup_type_image');
 const popupTypeImageElementImage =
@@ -27,6 +28,7 @@ const profileDescription = page.querySelector('.profile__description');
 const cardsList = page.querySelector('.places__list');
 const formsList = document.forms;
 const formEditProfile = formsList.editProfile;
+const formAvatar = formsList.updateAvatar;
 const formNewPlace = formsList.newPlace;
 const validationConfig = {
   formSelector: '.popup__form',
@@ -39,6 +41,7 @@ const validationConfig = {
 
 function handleFormEditProfileSubmit(evt) {
   evt.preventDefault();
+  renderFormLoading(true);
   const userData = {
     name: formEditProfile.elements.name.value,
     about: formEditProfile.elements.description.value,
@@ -51,13 +54,36 @@ function handleFormEditProfileSubmit(evt) {
     })
     .catch((error) => {
       console.error(error);
+    })
+    .finally(() => {
+      renderFormLoading(false);
+      modalComponent.closePopup(document.querySelector('.popup_is-opened'));
+      evt.target.reset();
     });
-  modalComponent.closePopup(document.querySelector('.popup_is-opened'));
-  evt.target.reset();
+}
+
+function handleFormAvatarSubmit(evt) {
+  evt.preventDefault();
+  renderFormLoading(true);
+  const url = formAvatar.elements.link.value;
+  apiComponent
+    .requestUpdateAvatar(url)
+    .then((user) => {
+      profileImage.style.cssText = `background-image: url(${user.avatar})`;
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+    .finally(() => {
+      renderFormLoading(false);
+      modalComponent.closePopup(document.querySelector('.popup_is-opened'));
+      evt.target.reset();
+    });
 }
 
 function handleFormNewPlaceSubmit(evt) {
   evt.preventDefault();
+  renderFormLoading(true);
   const dataCard = {
     name: formNewPlace.elements.placeName.value,
     link: formNewPlace.elements.link.value,
@@ -75,9 +101,12 @@ function handleFormNewPlaceSubmit(evt) {
     })
     .catch((error) => {
       console.error(error);
+    })
+    .finally(() => {
+      renderFormLoading(false);
+      modalComponent.closePopup(document.querySelector('.popup_is-opened'));
+      evt.target.reset();
     });
-  modalComponent.closePopup(page.querySelector('.popup_is-opened'));
-  evt.target.reset();
 }
 
 function deployCard(evt) {
@@ -86,6 +115,18 @@ function deployCard(evt) {
   popupTypeImageElementCaption.textContent = evt.target.alt;
   modalComponent.openPopup(popupTypeImage);
 }
+
+function renderFormLoading(isLoading) {
+  const submit = page
+    .querySelector('.popup_is-opened')
+    .querySelector('.popup__button');
+  if (isLoading) {
+    submit.textContent = 'Сохранение...';
+  } else {
+    submit.textContent = 'Сохранить';
+  }
+}
+
 /**
  * Initialization
  */
@@ -116,6 +157,12 @@ popupTypeEditOpenButton.addEventListener('click', () => {
   modalComponent.openPopup(popupTypeEdit);
 });
 
+profileImage.addEventListener('click', () => {
+  formAvatar.elements.link.value = '';
+  validationComponent.clearValidation(formAvatar, validationConfig);
+  modalComponent.openPopup(popupTypeAvatar);
+});
+
 popupTypeAddOpenButton.addEventListener('click', () => {
   formNewPlace.elements.placeName.value = '';
   formNewPlace.elements.link.value = '';
@@ -138,6 +185,8 @@ pageContent.querySelectorAll('.popup__close').forEach((elem) => {
 formEditProfile.addEventListener('submit', handleFormEditProfileSubmit);
 
 formNewPlace.addEventListener('submit', handleFormNewPlaceSubmit);
+
+formAvatar.addEventListener('submit', handleFormAvatarSubmit);
 
 formEditProfile.elements.name.value = profileTitle.textContent;
 
