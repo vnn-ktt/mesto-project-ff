@@ -1,6 +1,5 @@
 export const server_CONFIG = {
   base_URL: 'https://mesto.nomoreparties.co/v1/wff-cohort-5',
-  _id_user: '47297d9309928cb3febfdc1a',
   headers: {
     authorization: 'e918f767-bd1e-42f7-810a-91d0bd90b520',
     'Content-Type': 'application/json',
@@ -15,13 +14,6 @@ async function handleResponse(response) {
     return Promise.reject(`Ошибка запроса к серверу: ${response.status}`);
   }
 }
-
-export const requestHead = async (url) => {
-  const response = await fetch(`${url}`, {
-    method: 'HEAD',
-  });
-  return handleResponse(response);
-};
 
 export const requestGetUser = async () => {
   const response = await fetch(`${server_CONFIG.base_URL}/users/me`, {

@@ -2,9 +2,6 @@ export const enableValidation = (domFormList, validationConfig) => {
   const arrFormList = Array.from(domFormList);
   arrFormList.forEach((formElem) => {
     setEventListenersToForm(formElem, validationConfig);
-    formElem.addEventListener('submit', function (evt) {
-      evt.preventDefault();
-    });
   });
 };
 
@@ -16,7 +13,7 @@ export const clearValidation = (form, validationConfig) => {
   arrInputList.forEach((inputElem) => {
     hideInputError(form, inputElem, validationConfig);
   });
-  button.classList.add(validationConfig.inactiveButtonClass);
+  disableButton(button, validationConfig);
 };
 
 const setEventListenersToForm = (form, validationConfig) => {
@@ -33,11 +30,21 @@ const setEventListenersToForm = (form, validationConfig) => {
   });
 };
 
+const disableButton = (button, validationConfig) => {
+  button.classList.add(validationConfig.inactiveButtonClass);
+  button.setAttribute('disabled', true);
+};
+
+const enableButton = (button, validationConfig) => {
+  button.classList.remove(validationConfig.inactiveButtonClass);
+  button.removeAttribute('disabled');
+};
+
 const toggleButtonState = (arrInputList, button, validationConfig) => {
   if (hasInvalidInput(arrInputList)) {
-    button.classList.add(validationConfig.inactiveButtonClass);
+    disableButton(button, validationConfig);
   } else {
-    button.classList.remove(validationConfig.inactiveButtonClass);
+    enableButton(button, validationConfig);
   }
 };
 
