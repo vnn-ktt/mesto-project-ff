@@ -27,10 +27,9 @@ jobs:
 
       - name: Prod-Build project
         run: npm run prod
-          
+
       - name: Deploy
-        uses: actions/github-pages-deploy-pages@v4
-        with: 
-          folder: ./dist
+        uses: JamesIves/github-pages-deploy-action@4
+        with:
           branch: gh-pages
-          single-commit: true
+          folder: out
