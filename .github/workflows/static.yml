@@ -29,7 +29,7 @@ jobs:
         run: npm run prod
           
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-pages@v4
+        uses: actions/github-pages-deploy-pages@v4
         with: 
           folder: ./dist
           branch: gh-pages
