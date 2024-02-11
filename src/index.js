@@ -91,7 +91,7 @@ function handleFormAvatarSubmit(evt) {
   apiComponent
     .requestUpdateAvatar(url)
     .then((user) => {
-      profileImage.style.cssText = `background-image: url(${user.avatar})`;
+      profileImage.style.backgroundImage = `url(${user.avatar})`;
       modalComponent.closePopup(popupTypeAvatar);
       evt.target.reset();
     })
